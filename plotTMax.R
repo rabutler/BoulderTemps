@@ -1,6 +1,7 @@
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+source('getData.R')
 
 hData <- read.table('data/boulderdaily.complete.txt', sep = '', skip = 15)
 names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 'snowcover')
@@ -19,6 +20,16 @@ h2 <- hData %>%
   arrange(monDay) %>%
   mutate(newDay = seq(1, length(monDay)))
 
+day2 <- as.character(Sys.Date() - 1)
+# **** to do
+# make the conversion to newDay a bit safer-- maybe
+# also, add in the variable to see if the current day value is greater than or less than the
+# record; probably combine with h2 so we don't have to use two different data frames
+cTmp <- getTempsThroughToday(day2)
+cTmp$data <- cTmp$data %>%
+  mutate(newDay = seq(1, length(date)))
+  
+
 ggplot(h2) +
   theme(plot.background = element_blank(),
         panel.grid.minor = element_blank(),
@@ -26,8 +37,9 @@ ggplot(h2) +
         panel.border = element_blank(),
         panel.background = element_blank(),
         axis.ticks = element_blank(),
-        #axis.text = element_blank(),  
         axis.title = element_blank()) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
-  geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4")
+  geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
+  geom_line(data = cTmp$data, aes(newDay, value))
 
+  
