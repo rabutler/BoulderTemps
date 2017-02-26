@@ -28,6 +28,9 @@ day2 <- as.character(Sys.Date() - 1)
 cTmp <- getTempsThroughToday(day2)
 cTmp$data <- cTmp$data %>%
   mutate(newDay = seq(1, length(date)))
+
+# ***** to do
+# make the yintercept lines smarter
   
 
 ggplot(h2) +
@@ -37,9 +40,12 @@ ggplot(h2) +
         panel.border = element_blank(),
         panel.background = element_blank(),
         axis.ticks = element_blank(),
-        axis.title = element_blank()) +
+        axis.title = element_blank(),
+        axis.line.y = element_line(color = 'wheat4', size = 1)) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
-  geom_line(data = cTmp$data, aes(newDay, value))
+  geom_line(data = cTmp$data, aes(newDay, value), size = .75, color = 'grey40') +
+  scale_x_continuous(expand = c(0,0)) +
+  geom_hline(yintercept = seq(-10,110,10), color = 'white')
 
   
