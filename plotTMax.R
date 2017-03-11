@@ -3,6 +3,13 @@ library(ggplot2)
 library(lubridate)
 source('getData.R')
 
+# function to turn y-axis labels into degree formatted values
+# from: http://rpubs.com/bradleyboehmke/weather_graphic
+dgr_fmt <- function(x, ...) {
+  parse(text = paste(x, "*degree", sep = ""))
+}
+
+
 hData <- read.table('data/boulderdaily.complete.txt', sep = '', skip = 15)
 names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 'snowcover')
 
