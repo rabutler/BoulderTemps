@@ -29,9 +29,12 @@ cTmp <- getTempsThroughToday(day2)
 cTmp$data <- cTmp$data %>%
   mutate(newDay = seq(1, length(date)))
 
-# ***** to do
-# make the yintercept lines smarter
+yRange <- range(h2$tmax.max, h2$tmax.min, cTmp$data$value)
+yRange[1] <- floor(yRange[1] / 10) * 10 # round down to nearest 10
+yRange[2] <- ceiling(yRange[2] / 10) * 10 # round up to nearest 10
+yLabs <- seq(yRange[1], yRange[2],10)
   
+eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
 ggplot(h2) +
   theme(plot.background = element_blank(),
@@ -45,7 +48,11 @@ ggplot(h2) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
   geom_line(data = cTmp$data, aes(newDay, value), size = .75, color = 'grey40') +
-  scale_x_continuous(expand = c(0,0)) +
-  geom_hline(yintercept = seq(-10,110,10), color = 'white')
+  scale_x_continuous(expand = c(0,0), labels = month.name, 
+                     breaks = c(15,45,75,105,135,165,195,228,258,288,320,350)) +
+  coord_cartesian(ylim = range(yLabs)) +
+  scale_y_continuous(labels = yLabs, breaks = yLabs) +
+  geom_hline(yintercept = yLabs, color = 'white') +
+  geom_vline(xintercept = eomDays, color = 'wheat4', linetype = 3, size = .5)
 
   
