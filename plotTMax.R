@@ -1,6 +1,7 @@
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(stringr)
 source('getData.R')
 
 # function to turn y-axis labels into degree formatted values
@@ -53,7 +54,7 @@ yLabs <- seq(yRange[1], yRange[2],10)
   
 eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
-ggplot(h2) +
+gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
@@ -61,7 +62,9 @@ ggplot(h2) +
         panel.background = element_blank(),
         axis.ticks = element_blank(),
         axis.title = element_blank(),
-        axis.line.y = element_line(color = 'wheat4', size = 1)) +
+        axis.line.y = element_line(color = 'wheat4', size = 1),
+        plot.title = element_text(face = 'bold', color = '#3c3c3c'),
+        plot.subtitle = element_text(face = 'bold', size = 9)) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
   geom_line(aes(newDay, cTmp), size = .75, color = 'grey40') +
@@ -72,6 +75,12 @@ ggplot(h2) +
   geom_hline(yintercept = yLabs, color = 'white') +
   geom_vline(xintercept = eomDays, color = 'wheat4', linetype = 3, size = .5) +
   geom_point(aes(x = newDay, y = recordHigh), color = 'firebrick3') +
-  geom_point(aes(x = newDay, y = recordLow), color = 'blue3')
+  geom_point(aes(x = newDay, y = recordLow), color = 'blue3') +
+  ggtitle("Boulder's Weather in 2017", subtitle = 'Temperature')
+
+annText <- "Data represent daily maximum temperatures. Historical data available for 1896-2016."
+
+gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 25), 
+              color = 'grey30', size = 3, hjust = 0, vjust = 1)
 
   
