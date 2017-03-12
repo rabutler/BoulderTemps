@@ -71,16 +71,28 @@ gg <- ggplot(h2) +
   scale_x_continuous(expand = c(0,0), labels = month.name, 
                      breaks = c(15,45,75,105,135,165,195,228,258,288,320,350)) +
   coord_cartesian(ylim = range(yLabs)) +
-  scale_y_continuous(labels = dgr_fmt(yLabs), breaks = yLabs) +
+  scale_y_continuous(labels = dgr_fmt(yLabs), breaks = yLabs, expand = c(0,0)) +
   geom_hline(yintercept = yLabs, color = 'white') +
   geom_vline(xintercept = eomDays, color = 'wheat4', linetype = 3, size = .5) +
   geom_point(aes(x = newDay, y = recordHigh), color = 'firebrick3') +
   geom_point(aes(x = newDay, y = recordLow), color = 'blue3') +
   ggtitle("Boulder's Weather in 2017", subtitle = 'Temperature')
 
-annText <- "Data represent daily maximum temperatures. Historical data available for 1896-2016."
+annText <- "Data represent maximum daily temperatures. Historical data available for 1896-2016."
 
-gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 25), 
-              color = 'grey30', size = 3, hjust = 0, vjust = 1)
+legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
+
+gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
+              color = 'grey30', size = 3, hjust = 0, vjust = 1) +
+  annotate('segment', x = 181, xend = 181, y = 5, yend = 25, color = 'wheat2', size = 3) +
+  annotate("segment", x = 181, xend = 181, y = 12, yend = 18, colour = "wheat4", size = 3) +
+  geom_line(data = legData, aes(x = x, y = y), color = 'grey40', size = .75) +
+  annotate("segment", x = 183, xend = 185, y = 18, yend = 18, colour = "wheat4", size=.5) +
+  annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, colour = "wheat4", size=.5) +
+  annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, colour = "wheat4", size=.5) +
+  annotate("text", x = 186, y = 15, label = "NORMAL RANGE", size=2, colour="gray30", hjust = 0, vjust = .5) +
+  annotate("text", x = 175, y = 15, label = "2017 TEMPERATURE", size=2, colour="gray30", hjust = 1, vjust = .5) +
+  annotate("text", x = 183, y = 25, label = "RECORD HIGH", size=2, colour="gray30", hjust = 0, vjust = .5) +
+  annotate("text", x = 183, y = 5, label = "RECORD LOW", size=2, colour="gray30", hjust = 0, vjust = .5)
 
   
