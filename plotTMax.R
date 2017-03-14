@@ -23,7 +23,8 @@ h2 <- hData %>%
   filter(monDay != '2-29', tmax != -998) %>%
   group_by(monDay) %>%
   summarize(tmax.max = max(tmax), tmax.min = min(tmax), tmax.75 = quantile(tmax, .75),
-            tmax.25 = quantile(tmax,.25), tavg = mean(tmax)) %>%
+            tmax.25 = quantile(tmax,.25), tmax.ul = quantile(tmax, .95),
+            tmax.ll = quantile(tmax, .05), tavg = mean(tmax)) %>%
   mutate(monDay = mdy(monDay, truncated = TRUE)) %>%
   arrange(monDay) %>%
   mutate(newDay = seq(1, length(monDay)))
@@ -74,6 +75,7 @@ gg <- ggplot(h2) +
         plot.title = element_text(face = 'bold', color = '#3c3c3c'),
         plot.subtitle = element_text(face = 'bold', size = 9)) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
+  geom_linerange(aes(x = newDay, ymin = tmax.ll, ymax = tmax.ul), color = 'peru') +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
   geom_line(aes(newDay, cTmp), size = .75, color = 'grey40') +
   scale_x_continuous(expand = c(0,0), labels = month.name, 
@@ -87,11 +89,11 @@ gg <- ggplot(h2) +
   ggtitle("Boulder's Weather in 2017", subtitle = 'Temperature')
 
 annText <- "Data represent maximum daily temperatures. Historical data available for 1896-2016."
-dataThroughText <- paste('2017 data included through', lastDayOfData)
+dataThroughText <- paste('2017 data included through:', lastDayOfData)
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
-gg <- gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
+gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
               color = 'grey30', size = 3, hjust = 0, vjust = 1) +
   annotate('segment', x = 181, xend = 181, y = 5, yend = 25, color = 'wheat2', size = 3) +
   annotate("segment", x = 181, xend = 181, y = 12, yend = 18, colour = "wheat4", size = 3) +
@@ -103,9 +105,7 @@ gg <- gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(ann
   annotate("text", x = 175, y = 15, label = "2017 TEMPERATURE", size=2, colour="gray30", hjust = 1, vjust = .5) +
   annotate("text", x = 183, y = 25, label = "RECORD HIGH", size=2, colour="gray30", hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = 5, label = "RECORD LOW", size=2, colour="gray30", hjust = 0, vjust = .5) + 
-  annotate('text', x = 288, y = max(yLabs), hjust = 0, vjust = 1, label = dataThroughText, color = 'wheat2')
+  annotate('text', x = 305, y = max(yLabs), hjust = 0, vjust = 1, size = 3,  
+           label = stringr::str_wrap(dataThroughText, 30), color = 'gray30')
 
-# ******* TO DO
-# add in the latest day of 2017 data into the data description
-# this should be updated based on the query from NOAA
 
