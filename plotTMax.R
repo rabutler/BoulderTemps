@@ -88,8 +88,8 @@ gg <- ggplot(h2) +
   geom_point(aes(x = newDay, y = recordLow), color = 'blue3') +
   ggtitle("Boulder's Weather in 2017", subtitle = 'Temperature')
 
-annText <- "Data represent maximum daily temperatures. Historical data available for 1896-2016."
-dataThroughText <- paste('2017 data included through:', lastDayOfData)
+annText <- paste("Data represent maximum daily temperatures. Historical data available for 1896-2016.", 
+                 '2017 data included through:', lastDayOfData)
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
@@ -104,8 +104,6 @@ gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 
   annotate("text", x = 186, y = 15, label = "NORMAL RANGE", size=2, colour="gray30", hjust = 0, vjust = .5) +
   annotate("text", x = 175, y = 15, label = "2017 TEMPERATURE", size=2, colour="gray30", hjust = 1, vjust = .5) +
   annotate("text", x = 183, y = 25, label = "RECORD HIGH", size=2, colour="gray30", hjust = 0, vjust = .5) +
-  annotate("text", x = 183, y = 5, label = "RECORD LOW", size=2, colour="gray30", hjust = 0, vjust = .5) + 
-  annotate('text', x = 305, y = max(yLabs), hjust = 0, vjust = 1, size = 3,  
-           label = stringr::str_wrap(dataThroughText, 30), color = 'gray30')
+  annotate("text", x = 183, y = 5, label = "RECORD LOW", size=2, colour="gray30", hjust = 0, vjust = .5)
 
 
