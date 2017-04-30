@@ -2,6 +2,7 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(stringr)
+library(svglite)
 source('getData.R')
 
 # function to turn y-axis labels into degree formatted values
@@ -50,6 +51,7 @@ h2 <- h2 %>%
          recordLow = ifelse(cTmp < tmax.min, cTmp, NA)) %>%
   arrange(newDay) # make sure it is ordered
 
+# find the last day of 2017 data
 lastDayOfData <- cTmp$data$monDayYr[min(which(is.na(h2$cTmp))) - 1]
 
 # compute the y-range to use based on the data
@@ -58,9 +60,6 @@ yRange[1] <- floor(yRange[1] / 10) * 10 # round down to nearest 10
 yRange[2] <- ceiling(yRange[2] / 10) * 10 # round up to nearest 10
 yLabs <- seq(yRange[1], yRange[2],10)
 
-# find the last day of 2017 data
-
-  
 eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
 gg <- ggplot(h2) +
@@ -73,7 +72,8 @@ gg <- ggplot(h2) +
         axis.title = element_blank(),
         axis.line.y = element_line(color = 'wheat4', size = 1),
         plot.title = element_text(face = 'bold', color = '#3c3c3c'),
-        plot.subtitle = element_text(face = 'bold', size = 9)) +
+        plot.subtitle = element_text(face = 'bold', size = 9),
+        plot.caption = element_text(face = "italic", size = 8)) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
   geom_linerange(aes(x = newDay, ymin = tmax.ll, ymax = tmax.ul), color = 'peru') +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
@@ -86,15 +86,18 @@ gg <- ggplot(h2) +
   geom_vline(xintercept = eomDays, color = 'wheat4', linetype = 3, size = .5) +
   geom_point(aes(x = newDay, y = recordHigh), color = 'firebrick3') +
   geom_point(aes(x = newDay, y = recordLow), color = 'blue3') +
-  ggtitle("Boulder's Weather in 2017", subtitle = 'Temperature')
+  labs(title = "Boulder's Daily Highs in 2017", 
+       subtitle = 'Temperature',
+       caption = paste("Last updated:", now()))
 
 annText <- paste("Data represent maximum daily temperatures. Historical data available for 1896-2016.", 
                  '2017 data included through:', lastDayOfData)
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
-gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
-              color = 'grey30', size = 3, hjust = 0, vjust = 1) +
+gg <- gg + 
+  annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
+            color = 'grey30', size = 3, hjust = 0, vjust = 1) +
   annotate('segment', x = 181, xend = 181, y = 5, yend = 25, color = 'wheat2', size = 3) +
   annotate("segment", x = 181, xend = 181, y = 12, yend = 18, colour = "wheat4", size = 3) +
   geom_line(data = legData, aes(x = x, y = y), color = 'grey40', size = .75) +
@@ -106,4 +109,10 @@ gg + annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 
   annotate("text", x = 183, y = 25, label = "RECORD HIGH", size=2, colour="gray30", hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = 5, label = "RECORD LOW", size=2, colour="gray30", hjust = 0, vjust = .5)
 
+ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
+       height = 6, units = "in")
 
+# *** to do:
+# 1. parameterize the colors so I can play with them
+# 2. review the description for clarity
+# 3. add 5-95 into the legend
