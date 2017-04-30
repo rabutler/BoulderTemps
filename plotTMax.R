@@ -65,8 +65,12 @@ eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 titleCol <- "#3c3c3c" # title/subtitle color
 col90 <- "peru" # color of the 5th-95th percentile
 colAnn <- "grey30" # annotation color
-colNewHigh <- "firebrick3"
-colNewLow <- "blue3"
+colNewHigh <- "firebrick3" # new record high
+colNewLow <- "blue3" # new record low
+colMaxMin <- "wheat2" # the historical min/max color
+col50 <- "wheat4" # 25th-50th percentile color
+colCurrent <- "grey40" # the current daily high temp line
+colYaxis <- "wheat4"
 
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
@@ -76,20 +80,20 @@ gg <- ggplot(h2) +
         panel.background = element_blank(),
         axis.ticks = element_blank(),
         axis.title = element_blank(),
-        axis.line.y = element_line(color = 'wheat4', size = 1),
+        axis.line.y = element_line(color = colYaxis, size = 1),
         plot.title = element_text(face = 'bold', color = titleCol),
         plot.subtitle = element_text(face = 'bold', size = 9, color = titleCol),
         plot.caption = element_text(face = "italic", size = 8, color = titleCol)) +
-  geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
+  geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = colMaxMin) +
   geom_linerange(aes(x = newDay, ymin = tmax.ll, ymax = tmax.ul), color = col90) +
-  geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
-  geom_line(aes(newDay, cTmp), size = .75, color = 'grey40') +
+  geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), color = col50) +
+  geom_line(aes(newDay, cTmp), size = .75, color = colCurrent) +
   scale_x_continuous(expand = c(0,0), labels = month.name, 
                      breaks = c(15,45,75,105,135,165,195,228,258,288,320,350)) +
   coord_cartesian(ylim = range(yLabs)) +
   scale_y_continuous(labels = dgr_fmt(yLabs), breaks = yLabs, expand = c(0,0)) +
   geom_hline(yintercept = yLabs, color = 'white') +
-  geom_vline(xintercept = eomDays, color = 'wheat4', linetype = 3, size = .5) +
+  geom_vline(xintercept = eomDays, color = colYAxis, linetype = 3, size = .5) +
   geom_point(aes(x = newDay, y = recordHigh), color = colNewHigh) +
   geom_point(aes(x = newDay, y = recordLow), color = colNewLow) +
   labs(title = "Boulder's Daily Highs in 2017", 
@@ -103,16 +107,16 @@ legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
 g2 <- gg + 
   annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
-            color = 'grey30', size = 3, hjust = 0, vjust = 1) +
-  annotate('segment', x = 181, xend = 181, y = -2, yend = 32, color = 'wheat2', size = 3) +
+            color = colAnn, size = 3, hjust = 0, vjust = 1) +
+  annotate('segment', x = 181, xend = 181, y = -2, yend = 32, color = colMaxMin, size = 3) +
   annotate("segment", x = 181, xend = 181, y = 5, yend = 25, color = col90, size = 3) +
-  annotate("segment", x = 181, xend = 181, y = 12, yend = 18, colour = "wheat4", size = 3) +
+  annotate("segment", x = 181, xend = 181, y = 12, yend = 18, color = col50, size = 3) +
   annotate("point", x = 181, y = 34, color = colNewHigh) +
   annotate("point", x = 181, y = -4, color = colNewLow) +
-  geom_line(data = legData, aes(x = x, y = y), color = 'grey40', size = .75) +
-  annotate("segment", x = 183, xend = 185, y = 18, yend = 18, colour = "wheat4", size=.5) +
-  annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, colour = "wheat4", size=.5) +
-  annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, colour = "wheat4", size=.5) +
+  geom_line(data = legData, aes(x = x, y = y), color = colCurrent, size = .75) +
+  annotate("segment", x = 183, xend = 185, y = 18, yend = 18, color = col50, size=.5) +
+  annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, color = col50, size=.5) +
+  annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, color = col50, size=.5) +
   annotate("text", x = 186, y = 15, label = "NORMAL RANGE\n25TH-75TH PERCENTILE", size=2, colour=colAnn, hjust = 0, vjust = .5) +
   annotate("text", x = 175, y = 15, label = "2017 TEMPERATURE", size=2, colour=colAnn, hjust = 1, vjust = .5) +
   annotate("text", x = 183, y = 31, label = "HISTORICAL RECORD HIGH", size=2, colour=colAnn, hjust = 0, vjust = .5) +
@@ -124,6 +128,3 @@ g2 <- gg +
 #ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
 #       height = 6, units = "in")
 
-# *** to do:
-# 1. parameterize the colors so I can play with them
-# 2. review the description for clarity
