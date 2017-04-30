@@ -70,7 +70,7 @@ colNewLow <- "blue3" # new record low
 colMaxMin <- "wheat2" # the historical min/max color
 col50 <- "wheat4" # 25th-50th percentile color
 colCurrent <- "grey40" # the current daily high temp line
-colYaxis <- "wheat4"
+colYAxis <- "wheat4"
 
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
@@ -105,7 +105,7 @@ annText <- paste("Data represent maximum daily temperatures. Historical data ava
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
-g2 <- gg + 
+gg <- gg + 
   annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
             color = colAnn, size = 3, hjust = 0, vjust = 1) +
   annotate('segment', x = 181, xend = 181, y = -2, yend = 32, color = colMaxMin, size = 3) +
@@ -125,6 +125,6 @@ g2 <- gg +
   annotate("text", x = 183, y = 25, label = "95TH PERCENTILE", size = 2, color = colAnn, hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = c(34, -4), label = c("NEW RECORD HIGH", "NEW RECORD LOW"), size = 2, color = colAnn, hjust = 0, vjust = .5)
 
-#ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
-#       height = 6, units = "in")
+ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
+       height = 6, units = "in")
 
