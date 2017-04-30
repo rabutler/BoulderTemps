@@ -80,7 +80,7 @@ gg <- ggplot(h2) +
         panel.background = element_blank(),
         axis.ticks = element_blank(),
         axis.title = element_blank(),
-        axis.line.y = element_line(color = colYaxis, size = 1),
+        axis.line.y = element_line(color = colYAxis, size = 1),
         plot.title = element_text(face = 'bold', color = titleCol),
         plot.subtitle = element_text(face = 'bold', size = 9, color = titleCol),
         plot.caption = element_text(face = "italic", size = 8, color = titleCol)) +
