@@ -62,6 +62,8 @@ yLabs <- seq(yRange[1], yRange[2],10)
 
 eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
+titleCol <- "#3c3c3c"
+
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
         panel.grid.minor = element_blank(),
@@ -71,9 +73,9 @@ gg <- ggplot(h2) +
         axis.ticks = element_blank(),
         axis.title = element_blank(),
         axis.line.y = element_line(color = 'wheat4', size = 1),
-        plot.title = element_text(face = 'bold', color = '#3c3c3c'),
-        plot.subtitle = element_text(face = 'bold', size = 9),
-        plot.caption = element_text(face = "italic", size = 8)) +
+        plot.title = element_text(face = 'bold', color = titleCol),
+        plot.subtitle = element_text(face = 'bold', size = 9, color = titleCol),
+        plot.caption = element_text(face = "italic", size = 8, color = titleCol)) +
   geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = "wheat2") +
   geom_linerange(aes(x = newDay, ymin = tmax.ll, ymax = tmax.ul), color = 'peru') +
   geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), colour = "wheat4") +
