@@ -35,3 +35,5 @@ vignettes/*.pdf
 
 # Thumbs.db files
 figs/Thumbs.db
+
+batchOutput.txt
