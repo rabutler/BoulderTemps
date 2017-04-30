@@ -1,5 +1,5 @@
 @echo off
->batchOutput.txt (
+>batchOutput.txt 2>&1(
 	cd C:\Users\Wheatgrass\Documents\GitHub\BoulderTemps\
 	"C:\Program Files\R\R-3.3.1\bin\Rscript.exe" plotTMax.R
 	"C:\Program Files\Git\bin\git.exe" add .
