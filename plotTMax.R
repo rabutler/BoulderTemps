@@ -63,14 +63,20 @@ yLabs <- seq(yRange[1], yRange[2],10)
 eomDays <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
 titleCol <- "#3c3c3c" # title/subtitle color
-col90 <- "peru" # color of the 5th-95th percentile
 colAnn <- "grey30" # annotation color
 colNewHigh <- "firebrick3" # new record high
 colNewLow <- "blue3" # new record low
-colMaxMin <- "wheat2" # the historical min/max color
-col50 <- "wheat4" # 25th-50th percentile color
 colCurrent <- "grey40" # the current daily high temp line
 colYAxis <- "wheat4"
+
+#colMaxMin <- "wheat2" # the historical min/max color
+#col90 <- "peru" # color of the 5th-95th percentile
+#col50 <- "wheat4" # 25th-50th percentile color
+
+#"#"  d85d56
+colMaxMin <- "#f1b373" 
+col90 <- "#f3d49b"
+col50 <- "#8d4646"
 
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
