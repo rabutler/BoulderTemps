@@ -74,9 +74,9 @@ colYAxis <- "wheat4"
 #col50 <- "wheat4" # 25th-50th percentile color
 
 #"#"    f3d49b
-colMaxMin <- "#8d4646"  
+colMaxMin <- "#f1b373"  
 col90 <- "#d85d56"
-col50 <- "#f1b373"
+col50 <- "#8d4646"
 
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
