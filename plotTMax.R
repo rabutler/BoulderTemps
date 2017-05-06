@@ -73,10 +73,10 @@ colYAxis <- "wheat4"
 #col90 <- "peru" # color of the 5th-95th percentile
 #col50 <- "wheat4" # 25th-50th percentile color
 
-#"#"  d85d56
-colMaxMin <- "#f1b373" 
-col90 <- "#f3d49b"
-col50 <- "#8d4646"
+#"#"   8d4646
+colMaxMin <- "#d85d56"  
+col90 <- "#f1b373"
+col50 <- "#f3d49b"
 
 gg <- ggplot(h2) +
   theme(plot.background = element_blank(),
