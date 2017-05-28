@@ -134,3 +134,6 @@ gg <- gg +
 ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
        height = 6, units = "in")
 
+siteDir <- "C:\Users\Wheatgrass\Documents\rabutler.github.io\images\boulderTemps"
+ggsave(file.path(siteDir, "boulderHighs_current.png"), plot = gg, device = "png", width = 8,
+       height = 6, units = "in")
