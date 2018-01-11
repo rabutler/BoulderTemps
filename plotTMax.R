@@ -49,8 +49,8 @@ cTmp$data <- cTmp$data %>%
 h2 <- h2 %>%
   left_join(cTmp$data, by = 'newDay') %>%
   # if the current days high temp is a record high, or record low, set it to cTmp
-  mutate(recordHigh = ifelse(cTmp > tmax.max, cTmp, NA),
-         recordLow = ifelse(cTmp < tmax.min, cTmp, NA)) %>%
+  mutate(recordHigh = if_else(cTmp > tmax.max, cTmp, NaN),
+         recordLow = if_else(cTmp < tmax.min, cTmp, NaN)) %>%
   arrange(newDay) # make sure it is ordered
 
 # find the last day of 2017 data
@@ -104,12 +104,12 @@ gg <- ggplot(h2) +
   geom_vline(xintercept = eomDays, color = colYAxis, linetype = 3, size = .5) +
   geom_point(aes(x = newDay, y = recordHigh), color = colNewHigh) +
   geom_point(aes(x = newDay, y = recordLow), color = colNewLow) +
-  labs(title = "Boulder's Daily Highs in 2017", 
+  labs(title = paste("Boulder's Daily Highs in", currentYear), 
        subtitle = 'Temperature',
        caption = paste("Last updated:", now()))
 
 annText <- paste("Data represent maximum daily temperatures. Historical data available for 1896-2016.", 
-                 '2017 data included through:', lastDayOfData)
+                 currentYear, "data included through:", lastDayOfData)
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
@@ -126,7 +126,7 @@ gg <- gg +
   annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, color = col50, size=.5) +
   annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, color = col50, size=.5) +
   annotate("text", x = 186, y = 15, label = "NORMAL RANGE\n25TH-75TH PERCENTILE", size=2, colour=colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 175, y = 15, label = "2017 TEMPERATURE", size=2, colour=colAnn, hjust = 1, vjust = .5) +
+  annotate("text", x = 175, y = 15, label = paste(currentYear, "TEMPERATURE"), size=2, colour=colAnn, hjust = 1, vjust = .5) +
   annotate("text", x = 183, y = 31, label = "HISTORICAL RECORD HIGH", size=2, colour=colAnn, hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = -1, label = "HISTORICAL RECORD LOW", size=2, colour=colAnn, hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = 5, label = "5TH PERCENTILE", size = 2, color = colAnn, hjust = 0, vjust = .5) +
