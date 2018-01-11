@@ -17,8 +17,10 @@ names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 'snowc
 
 # format the historical data
 
+currentYear <- as.numeric(format(Sys.Date(), "%Y"))
+
 h2 <- hData %>%
-  filter(year >= 1898, year < 2017) %>%
+  filter(year >= 1898, year < currentYear) %>%
   mutate(monDay = paste(mon,day,sep = '-')) %>%
   # remove February 29 and data that is missing
   filter(monDay != '2-29', tmax != -998) %>%

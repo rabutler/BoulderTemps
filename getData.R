@@ -13,7 +13,7 @@ getTempsThroughToday <- function(day2, cityId = 'GHCND:USC00050848', dataId = 'T
   # Per https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt, the units are tenths of
   # degrees C
 
-  day1 <- '2017-01-01'
+  day1 <- paste(as.numeric(format(Sys.Date(), "%Y")), "01", "01", sep = "-")
 
   out2 <- ncdc(datasetid='GHCND', stationid=cityId, datatypeid=dataId, 
                startdate = day1, enddate = day2, limit=365)
