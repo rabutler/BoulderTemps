@@ -1,8 +1,10 @@
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-library(stringr)
-library(svglite)
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(lubridate)
+  library(stringr)
+  library(svglite)
+})
 source('getData.R')
 
 # function to turn y-axis labels into degree formatted values
