@@ -135,9 +135,21 @@ gg <- gg +
   annotate("text", x = 183, y = 25, label = "95TH PERCENTILE", size = 2, color = colAnn, hjust = 0, vjust = .5) +
   annotate("text", x = 183, y = c(34, -4), label = c("NEW RECORD HIGH", "NEW RECORD LOW"), size = 2, color = colAnn, hjust = 0, vjust = .5)
 
-ggsave(paste0("figs/boulderHighs_",today(),".png"), plot = gg, device = "png", width = 8,
-       height = 6, units = "in")
+ggsave(
+  paste0("figs/boulderHighs_",today(),".png"), 
+  plot = gg, 
+  device = "png", 
+  width = 8,
+  height = 6, 
+  units = "in"
+)
 
 siteDir <- "C:/Users/Alan/Documents/projects/site/images/boulderTemps"
-ggsave(file.path(siteDir, "boulderHighs_current.png"), plot = gg, device = "png", width = 8,
-       height = 6, units = "in")
+ggsave(
+  file.path(siteDir, "boulderHighs_current.png"), 
+  plot = gg, 
+  device = "png", 
+  width = 8,
+  height = 6, 
+  units = "in"
+)
