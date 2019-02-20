@@ -15,7 +15,8 @@ dgr_fmt <- function(x, ...) {
 
 
 hData <- read.table('data/boulderdaily.complete.txt', sep = '', skip = 15)
-names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 'snowcover')
+names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 
+                  'snowcover')
 
 # format the historical data
 
@@ -23,13 +24,19 @@ currentYear <- as.numeric(format(Sys.Date(), "%Y"))
 
 h2 <- hData %>%
   filter(year >= 1898, year < currentYear) %>%
-  mutate(monDay = paste(mon,day,sep = '-')) %>%
+  mutate(monDay = paste(mon, day, sep = '-')) %>%
   # remove February 29 and data that is missing
   filter(monDay != '2-29', tmax != -998) %>%
   group_by(monDay) %>%
-  summarize(tmax.max = max(tmax), tmax.min = min(tmax), tmax.75 = quantile(tmax, .75),
-            tmax.25 = quantile(tmax,.25), tmax.ul = quantile(tmax, .95),
-            tmax.ll = quantile(tmax, .05), tavg = mean(tmax)) %>%
+  summarize(
+    tmax_max = max(tmax), 
+    tmax_min = min(tmax), 
+    tmax_75 = quantile(tmax, .75),
+    tmax_25 = quantile(tmax,.25), 
+    tmax_ul = quantile(tmax, .95),
+    tmax_ll = quantile(tmax, .05), 
+    tavg = mean(tmax)
+  ) %>%
   mutate(monDay = mdy(monDay, truncated = TRUE)) %>%
   arrange(monDay) %>%
   mutate(newDay = seq(1, length(monDay)))
@@ -37,8 +44,9 @@ h2 <- hData %>%
 day2 <- as.character(Sys.Date() - 1)
 # **** to do
 # make the conversion to newDay a bit safer-- maybe
-# also, add in the variable to see if the current day value is greater than or less than the
-# record; probably combine with h2 so we don't have to use two different data frames
+# also, add in the variable to see if the current day value is greater than or 
+# less than the record; probably combine with h2 so we don't have to use two 
+# different data frames
 cTmp <- getTempsThroughToday(day2)
 cTmp$data <- cTmp$data %>%
   mutate(monDayYr = ymd(str_split_fixed(date, 'T', 2)[,1])) %>%
@@ -51,15 +59,15 @@ cTmp$data <- cTmp$data %>%
 h2 <- h2 %>%
   left_join(cTmp$data, by = 'newDay') %>%
   # if the current days high temp is a record high, or record low, set it to cTmp
-  mutate(recordHigh = if_else(cTmp > tmax.max, cTmp, NaN),
-         recordLow = if_else(cTmp < tmax.min, cTmp, NaN)) %>%
+  mutate(recordHigh = if_else(cTmp > tmax_max, cTmp, NaN),
+         recordLow = if_else(cTmp < tmax_min, cTmp, NaN)) %>%
   arrange(newDay) # make sure it is ordered
 
 # find the last day of 2017 data
 lastDayOfData <- cTmp$data$monDayYr[min(which(is.na(h2$cTmp))) - 1]
 
 # compute the y-range to use based on the data
-yRange <- range(h2$tmax.max, h2$tmax.min, h2$cTmp, na.rm = TRUE)
+yRange <- range(h2$tmax_max, h2$tmax_min, h2$cTmp, na.rm = TRUE)
 yRange[1] <- floor(yRange[1] / 10) * 10 # round down to nearest 10
 yRange[2] <- ceiling(yRange[2] / 10) * 10 # round up to nearest 10
 yLabs <- seq(yRange[1], yRange[2],10)
@@ -94,9 +102,9 @@ gg <- ggplot(h2) +
         plot.title = element_text(face = 'bold', color = titleCol),
         plot.subtitle = element_text(face = 'bold', size = 9, color = titleCol),
         plot.caption = element_text(face = "italic", size = 8, color = titleCol)) +
-  geom_linerange(aes(x = newDay, ymin=tmax.min, ymax=tmax.max), color = colMaxMin) +
-  geom_linerange(aes(x = newDay, ymin = tmax.ll, ymax = tmax.ul), color = col90) +
-  geom_linerange(aes(x=newDay, ymin=tmax.25, ymax=tmax.75), color = col50) +
+  geom_linerange(aes(x = newDay, ymin=tmax_min, ymax=tmax_max), color = colMaxMin) +
+  geom_linerange(aes(x = newDay, ymin = tmax_ll, ymax = tmax_ul), color = col90) +
+  geom_linerange(aes(x=newDay, ymin=tmax_25, ymax=tmax_75), color = col50) +
   geom_line(aes(newDay, cTmp), size = .75, color = colCurrent) +
   scale_x_continuous(expand = c(0,0), labels = month.name, 
                      breaks = c(15,45,75,105,135,165,195,228,258,288,320,350)) +
@@ -110,14 +118,23 @@ gg <- ggplot(h2) +
        subtitle = 'Temperature',
        caption = paste("Last updated:", now()))
 
-annText <- paste("Data represent maximum daily temperatures. Historical data available for 1896-2016.", 
-                 currentYear, "data included through:", lastDayOfData)
+annText <- paste(
+  "Data represent maximum daily temperatures. Historical data available for 1896-2018.", 
+  currentYear, "data included through:", lastDayOfData
+)
 
 legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
 
 gg <- gg + 
-  annotate('text', x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50), 
-            color = colAnn, size = 3, hjust = 0, vjust = 1) +
+  geom_label(
+    aes(x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50)), 
+    color = colAnn, 
+    size = 3, 
+    hjust = 0, 
+    vjust = 1, 
+    fill = "white", 
+    label.size = 0
+  ) +
   annotate('segment', x = 181, xend = 181, y = -2, yend = 32, color = colMaxMin, size = 3) +
   annotate("segment", x = 181, xend = 181, y = 5, yend = 25, color = col90, size = 3) +
   annotate("segment", x = 181, xend = 181, y = 12, yend = 18, color = col50, size = 3) +
@@ -127,13 +144,70 @@ gg <- gg +
   annotate("segment", x = 183, xend = 185, y = 18, yend = 18, color = col50, size=.5) +
   annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, color = col50, size=.5) +
   annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, color = col50, size=.5) +
-  annotate("text", x = 186, y = 15, label = "NORMAL RANGE\n25TH-75TH PERCENTILE", size=2, colour=colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 175, y = 15, label = paste(currentYear, "TEMPERATURE"), size=2, colour=colAnn, hjust = 1, vjust = .5) +
-  annotate("text", x = 183, y = 31, label = "HISTORICAL RECORD HIGH", size=2, colour=colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 183, y = -1, label = "HISTORICAL RECORD LOW", size=2, colour=colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 183, y = 5, label = "5TH PERCENTILE", size = 2, color = colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 183, y = 25, label = "95TH PERCENTILE", size = 2, color = colAnn, hjust = 0, vjust = .5) +
-  annotate("text", x = 183, y = c(34, -4), label = c("NEW RECORD HIGH", "NEW RECORD LOW"), size = 2, color = colAnn, hjust = 0, vjust = .5)
+  geom_label(
+    aes(x = 186, y = 15, label = "NORMAL RANGE\n25TH-75TH PERCENTILE"), 
+    size = 2, 
+    colour = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 175, y = 15, label = paste(currentYear, "TEMPERATURE")), 
+    size = 2, 
+    colour = colAnn, 
+    hjust = 1, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = 31, label = "HISTORICAL RECORD HIGH"), 
+    size = 2, 
+    colour = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = -4, label = "NEW RECORD LOW"), 
+    size = 2, 
+    color = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = -1, label = "HISTORICAL RECORD LOW"), 
+    size = 2, 
+    colour = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = 5, label = "5TH PERCENTILE"), 
+    size = 2, 
+    color = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = 25, label = "95TH PERCENTILE"), 
+    size = 2, 
+    color = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  ) +
+  geom_label(
+    aes(x = 183, y = 34, label = "NEW RECORD HIGH"), 
+    size = 2, 
+    color = colAnn, 
+    hjust = 0, 
+    vjust = .5,
+    label.size = 0
+  )
 
 ggsave(
   paste0("figs/boulderHighs_",today(),".png"), 
@@ -145,6 +219,9 @@ ggsave(
 )
 
 siteDir <- "C:/Users/Alan/Documents/projects/site/images/boulderTemps"
+
+stopifnot(dir.exists(siteDir))
+
 ggsave(
   file.path(siteDir, "boulderHighs_current.png"), 
   plot = gg, 
