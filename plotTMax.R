@@ -3,7 +3,6 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(lubridate)
   library(stringr)
-  library(svglite)
 })
 source('getData.R')
 source("compute_historical_stats.R")
