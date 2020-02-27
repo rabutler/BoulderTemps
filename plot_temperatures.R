@@ -70,6 +70,11 @@ plot_temperatures <- function(zz, tvar)
   )
   
   legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
+  if (tvar == "tmin")
+    legData$y <- legData$y - 20
+  
+  bracket_bottom <- get_legend_y(tvar, "hist_75_25", "stop")
+  bracket_top <- get_legend_y(tvar, "hist_75_25", "start") + 0.2
   
   gg <- gg + 
     geom_label(
@@ -81,17 +86,62 @@ plot_temperatures <- function(zz, tvar)
       fill = "white", 
       label.size = 0
     ) +
-    annotate('segment', x = 181, xend = 181, y = -2, yend = 32, color = colMaxMin, size = 3) +
-    annotate("segment", x = 181, xend = 181, y = 5, yend = 25, color = col90, size = 3) +
-    annotate("segment", x = 181, xend = 181, y = 12, yend = 18, color = col50, size = 3) +
-    annotate("point", x = 181, y = 34, color = colNewHigh) +
-    annotate("point", x = 181, y = -4, color = colNewLow) +
+    # legend bars get_legend_y <- function(tvar, bar, ss)
+    annotate(
+      'segment', 
+      x = 181, xend = 181, 
+      y = get_legend_y(tvar, "hist_max_min", "start"), 
+      yend = get_legend_y(tvar, "hist_max_min", "stop"), 
+      color = colMaxMin, size = 3
+    ) +
+    annotate(
+      "segment", 
+      x = 181, xend = 181, 
+      y = get_legend_y(tvar, "hist_95_5", "start"), 
+      yend = get_legend_y(tvar, "hist_95_5", "stop"), 
+      color = col90, size = 3
+    ) +
+    annotate(
+      "segment", 
+      x = 181, xend = 181, 
+      y = get_legend_y(tvar, "hist_75_25", "start"), 
+      yend = get_legend_y(tvar, "hist_75_25", "stop"), 
+      color = col50, size = 3
+    ) +
+    annotate(
+      "point", 
+      x = 181, y = get_legend_y(tvar, "record_high", "start"), 
+      color = colNewHigh
+    ) +
+    annotate(
+      "point", 
+      x = 181, y = get_legend_y(tvar, "record_low", "start"), 
+      color = colNewLow
+    ) +
+    # legend current line
     geom_line(data = legData, aes(x = x, y = y), color = colCurrent, size = .75) +
-    annotate("segment", x = 183, xend = 185, y = 18, yend = 18, color = col50, size=.5) +
-    annotate("segment", x = 183, xend = 185, y = 12.2, yend = 12.2, color = col50, size=.5) +
-    annotate("segment", x = 185, xend = 185, y = 12.2, yend = 18, color = col50, size=.5) +
+    # legend bracket
+    annotate(
+      "segment", 
+      x = 183, xend = 185, y = bracket_bottom, yend = bracket_bottom, 
+      color = col50, size = 0.5
+    ) +
+    annotate(
+      "segment", 
+      x = 183, xend = 185, y = bracket_top, yend = bracket_top, 
+      color = col50, size=.5
+    ) +
+    annotate(
+      "segment", 
+      x = 185, xend = 185, y = bracket_top, yend = bracket_bottom, 
+      color = col50, size = 0.5
+    ) +
+    # legend labels
     geom_label(
-      aes(x = 186, y = 15, label = "NORMAL RANGE\n25TH-75TH PERCENTILE"), 
+      aes(
+        x = 186, y = get_legend_y(tvar, "med_label", "start"), 
+        label = "NORMAL RANGE\n25TH-75TH PERCENTILE"
+      ), 
       size = 2, 
       colour = colAnn, 
       hjust = 0, 
@@ -99,7 +149,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 175, y = 15, label = paste(currentYear, "TEMPERATURE")), 
+      aes(
+        x = 175, y = get_legend_y(tvar, "current_label", "start"), 
+        label = paste(currentYear, "TEMPERATURE")
+      ), 
       size = 2, 
       colour = colAnn, 
       hjust = 1, 
@@ -107,7 +160,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = 31, label = "HISTORICAL RECORD HIGH"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "hist_max_label", "start"), 
+        label = "HISTORICAL RECORD HIGH"
+      ), 
       size = 2, 
       colour = colAnn, 
       hjust = 0, 
@@ -115,7 +171,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = -4, label = "NEW RECORD LOW"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "record_low_label", "start"), 
+        label = "NEW RECORD LOW"
+      ), 
       size = 2, 
       color = colAnn, 
       hjust = 0, 
@@ -123,7 +182,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = -1, label = "HISTORICAL RECORD LOW"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "hist_min_label", "start"), 
+        label = "HISTORICAL RECORD LOW"
+      ), 
       size = 2, 
       colour = colAnn, 
       hjust = 0, 
@@ -131,7 +193,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = 5, label = "5TH PERCENTILE"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "hist_5_label", "start"), 
+        label = "5TH PERCENTILE"
+      ), 
       size = 2, 
       color = colAnn, 
       hjust = 0, 
@@ -139,7 +204,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = 25, label = "95TH PERCENTILE"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "hist_95_label", "start"), 
+        label = "95TH PERCENTILE"
+      ), 
       size = 2, 
       color = colAnn, 
       hjust = 0, 
@@ -147,7 +215,10 @@ plot_temperatures <- function(zz, tvar)
       label.size = 0
     ) +
     geom_label(
-      aes(x = 183, y = 34, label = "NEW RECORD HIGH"), 
+      aes(
+        x = 183, y = get_legend_y(tvar, "record_high_label", "start"), 
+        label = "NEW RECORD HIGH"
+      ), 
       size = 2, 
       color = colAnn, 
       hjust = 0, 
@@ -162,4 +233,38 @@ plot_temperatures <- function(zz, tvar)
 # from: http://rpubs.com/bradleyboehmke/weather_graphic
 dgr_fmt <- function(x, ...) {
   parse(text = paste(x, "*degree", sep = ""))
+}
+
+#' @param bar The name of the place in the legend bar, e.g., record_high, 
+#'   hist_max, record_label
+#' @param ss "start" or "stop"
+get_legend_y <- function(tvar, bar, ss)
+{
+  tvar <- match.arg(tvar, c("tmin", "tmax"))
+  ss <- match.arg(ss, c("start", "stop"))
+  
+  bar_vals <- c("record_high", "hist_max_min", "hist_95_5", "hist_75_25", 
+                "record_low", "record_high_label",
+                "hist_max_label", "hist_95_label", "med_label", "hist_5_label",
+                "hist_min_label", "record_low_label", "current_label")
+  
+  assertthat::assert_that(
+    bar %in% bar_vals,
+    msg = paste(bar, "is not a valid `bar`")  
+  )
+  
+  # for tmax
+  y_vals <- if (ss == "start") {
+    c(34, -2, 5, 12, -4, 34, 31, 25, 15, 5, -1, -4, 15)
+  } else {
+    c(34, 32, 25, 18, -4, 34, 31, 25, 15, 5, -1, -4, 15)
+  }
+  
+  if (tvar == "tmin")
+    y_vals <- y_vals - 20
+ 
+  
+  names(y_vals) <- bar_vals
+  
+  y_vals[bar]
 }
