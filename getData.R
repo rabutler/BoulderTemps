@@ -1,5 +1,5 @@
 library(rnoaa)
-options(noaakey = Sys.getenv('NOAAAPIKEY'))
+#options(noaakey = Sys.getenv('NOAAAPIKEY'))
 
 #tmp <- ncdc_locs(locationcategoryid='CITY', sortfield='name', sortorder='desc')$data
 
@@ -16,7 +16,8 @@ getTempsThroughToday <- function(day2, cityId = 'GHCND:USC00050848', dataId = 'T
   day1 <- paste(as.numeric(format(Sys.Date(), "%Y")), "01", "01", sep = "-")
 
   out2 <- ncdc(datasetid='GHCND', stationid=cityId, datatypeid=dataId, 
-               startdate = day1, enddate = day2, limit=365)
+               startdate = day1, enddate = day2, limit=365,
+               token = Sys.getenv("NOAAAPIKEY"))
 
   # convert to degress F from tenths of degrees C
   out2$data$value <- out2$data$value / 10 * 9/5 +32
