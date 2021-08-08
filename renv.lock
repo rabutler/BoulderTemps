@@ -319,15 +319,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.9.3-28",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "renv",
-      "RemoteUsername": "rstudio",
-      "RemoteRef": "master",
-      "RemoteSha": "a94bc1eb94874cd6b6662420b58c28dd48b75ed7",
-      "Hash": "f59f1c023fe7d3f9636f445d92ad247e"
+      "Version": "0.14.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "30e5eba91b67f7f4d75d31de14bbfbdc"
     },
     "reshape2": {
       "Package": "reshape2",
@@ -352,10 +347,10 @@
     },
     "rnoaa": {
       "Package": "rnoaa",
-      "Version": "0.9.5",
+      "Version": "1.3.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4be24f551fb4d3dc7a65d497a6d194a8"
+      "Hash": "7a86c5583578ea6114dfb0bcb235a9c0"
     },
     "scales": {
       "Package": "scales",
