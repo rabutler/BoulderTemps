@@ -50,6 +50,8 @@ jobs:
         shell: Rscript {0}
           
       - name: Generate data
+        env: 
+          NOAAAPIKEY: ${{ secrets.NOAAAPIKEY }}
         run: |
           source("R/main.R")
         shell: Rscript {0} 
