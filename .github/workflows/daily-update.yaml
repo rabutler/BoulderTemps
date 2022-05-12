@@ -41,7 +41,7 @@ jobs:
         env: 
           NOAAAPIKEY: ${{ secrets.NOAAAPIKEY }}
         run: |
-          source("R/main.R")
+          source("main.R")
         shell: Rscript {0} 
         
       - name: Commit files
