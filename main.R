@@ -9,6 +9,8 @@ source("compute_historical_stats.R")
 source("plot_temperatures.R")
 source("helpers.R")
 
+copy_to_website <- FALSE
+
 # get data through yesterday
 day2 <- as.character(Sys.Date() - 1)
 
@@ -63,20 +65,22 @@ ggsave(
   units = "in"
 )
 
-# copy figures
-message("copy figures to website")
-siteDir <- "C:/Users/Alan/Documents/projects/rabutler.github.io/images/boulderTemps"
-
-stopifnot(dir.exists(siteDir))
-
-file.copy(
-  file_high, 
-  file.path(siteDir, "boulderHighs_current.png"), 
-  overwrite = TRUE
-)
-
-file.copy(
-  file_low, 
-  file.path(siteDir, "boulderLows_current.png"), 
-  overwrite = TRUE
-)
+# copy figures -------------------
+if (copy_to_website) {
+  message("copy figures to website")
+  siteDir <- "C:/Users/Alan/Documents/projects/rabutler.github.io/images/boulderTemps"
+  
+  stopifnot(dir.exists(siteDir))
+  
+  file.copy(
+    file_high, 
+    file.path(siteDir, "boulderHighs_current.png"), 
+    overwrite = TRUE
+  )
+  
+  file.copy(
+    file_low, 
+    file.path(siteDir, "boulderLows_current.png"), 
+    overwrite = TRUE
+  )
+}
