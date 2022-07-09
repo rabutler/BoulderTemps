@@ -63,10 +63,16 @@ plot_temperatures <- function(zz, tvar)
          subtitle = 'Temperature',
          caption = paste("Last updated:", now()))
   
+  hist_years <- get_hist_years()
+  
+  
   annText <- paste(
-    "Data represent", label_var[tvar], 
-    "daily temperatures. Historical data available for 1896-2019.", 
-    currentYear, "data included through:", lastDayOfData
+    paste("Data represent", label_var[tvar], "daily temperatures."), 
+    paste("Historical data available for",
+      paste0(paste(hist_years, collapse = "-"), ".")
+    ), 
+    paste(currentYear, "data included through:", lastDayOfData), 
+    sep = "\n"
   )
   
   legData <- data.frame(x = 176:181, y = c(17,15,18,22,20,23)-2)
@@ -78,7 +84,7 @@ plot_temperatures <- function(zz, tvar)
   
   gg <- gg + 
     geom_label(
-      aes(x = 8, y = max(yLabs), label = stringr::str_wrap(annText, 50)), 
+      aes(x = 8, y = max(yLabs), label = annText), 
       color = colAnn, 
       size = 3, 
       hjust = 0, 
@@ -267,4 +273,12 @@ get_legend_y <- function(tvar, bar, ss)
   names(y_vals) <- bar_vals
   
   y_vals[bar]
+}
+
+get_hist_years <- function() {
+  hData <- read.table('data/boulderdaily.complete.txt', sep = '', skip = 15)
+  names(hData) <- c('year', 'mon', 'day', 'tmax', 'tmin', 'precip', 'snow', 
+                    'snowcover')
+  
+  c(min(hData$year), max(hData$year))
 }
