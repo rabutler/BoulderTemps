@@ -39,7 +39,7 @@ jobs:
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04", package = c("curl")), sep = "\n")')
         
       - name: Cache R packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ env.RENV_PATHS_ROOT }}
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
