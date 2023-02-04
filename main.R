@@ -58,7 +58,27 @@ ggsave(
 )
 
 ggsave(
+  'figs/boulderHighs_current.png', 
+  plot = gg_high, 
+  device = "png", 
+  width = 8,
+  height = 6, 
+  units = "in",
+  type = 'cairo'
+)
+
+ggsave(
   file_low, 
+  plot = gg_low, 
+  device = "png", 
+  width = 8,
+  height = 6, 
+  units = "in",
+  type = 'cairo'
+)
+
+ggsave(
+  'figs/boulderLows_current.png', 
   plot = gg_low, 
   device = "png", 
   width = 8,
