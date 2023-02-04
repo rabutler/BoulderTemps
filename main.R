@@ -53,7 +53,8 @@ ggsave(
   device = "png", 
   width = 8,
   height = 6, 
-  units = "in"
+  units = "in",
+  type = 'cairo'
 )
 
 ggsave(
@@ -62,7 +63,8 @@ ggsave(
   device = "png", 
   width = 8,
   height = 6, 
-  units = "in"
+  units = "in",
+  type = 'cairo'
 )
 
 # copy figures -------------------
