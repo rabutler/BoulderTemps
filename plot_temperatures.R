@@ -35,7 +35,7 @@ plot_temperatures <- function(zz, tvar)
   
   gg <- ggplot(zz) +
     theme(
-      plot.background = element_blank(),
+      plot.background = element_rect(fill = 'white'),
       panel.grid.minor = element_blank(),
       panel.grid.major = element_blank(),
       panel.border = element_blank(),
