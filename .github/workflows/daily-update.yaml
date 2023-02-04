@@ -1,5 +1,6 @@
 on:
-  workflow_dispatch
+  schedule:
+    - cron: "3 3 * * *" # see https://crontab.guru
 
 jobs:
   generate-data:
