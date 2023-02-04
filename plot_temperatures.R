@@ -42,7 +42,7 @@ plot_temperatures <- function(zz, tvar)
       panel.background = element_blank(),
       axis.ticks = element_blank(),
       axis.title = element_blank(),
-      axis.line.y = element_line(color = colYAxis, size = 1),
+      axis.line.y = element_line(color = colYAxis, linewidth = 1),
       plot.title = element_text(face = 'bold', color = titleCol),
       plot.subtitle = element_text(face = 'bold', size = 9, color = titleCol),
       plot.caption = element_text(face = "italic", size = 8, color = titleCol)
@@ -50,7 +50,7 @@ plot_temperatures <- function(zz, tvar)
     geom_linerange(aes(x = newDay, ymin = min, ymax = max), color = colMaxMin) +
     geom_linerange(aes(x = newDay, ymin = ll, ymax = ul), color = col90) +
     geom_linerange(aes(x = newDay, ymin = q25, ymax = q75), color = col50) +
-    geom_line(aes(newDay, cTmp), size = .75, color = colCurrent) +
+    geom_line(aes(newDay, cTmp), linewidth = .75, color = colCurrent) +
     scale_x_continuous(expand = c(0,0), labels = month.name, 
                        breaks = c(15,45,75,105,135,165,195,228,258,288,320,350)) +
     coord_cartesian(ylim = range(yLabs)) +
