@@ -33,8 +33,8 @@ jobs:
       - name: Install dependencies
         if: runner.os == 'Linux'
         run: |
-          apt-get install -y libcurl4-openssl-dev
-          apt-get install -y libssl-dev
+          sudo apt-get install -y libcurl4-openssl-dev
+          sudo apt-get install -y libssl-dev
         
       - name: Cache R packages
         uses: actions/cache@v3
