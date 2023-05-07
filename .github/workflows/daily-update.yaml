@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-22.04,   r: 'release'}
+          - {os: ubuntu-20.04,   r: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -36,7 +36,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "22.04"), sep = "\n")')
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
         
       - name: Cache R packages
         uses: actions/cache@v3
