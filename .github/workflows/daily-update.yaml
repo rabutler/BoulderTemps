@@ -30,7 +30,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscipt -e 'cat(remotes::system_requirements("ubuntu", "22.04"), sep = "\n")')
+          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "22.04"), sep = "\n")')
       
       - name: Install remotes
         shell: Rscript {0}
